@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Photo Editor - MJart</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script defer src="https://unpkg.com/img-comparison-slider@7/dist/index.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/img-comparison-slider@7/dist/styles.css" />
+
+    <style>
+        /* Cyber-Dark Editor Theme */
+        body { 
+            background-color: #0F0F1E !important; 
+            font-family: 'Segoe UI', sans-serif; 
+            margin: 0; 
+            color: white;
+        }
+
+        .editor-wrapper { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh; 
+            padding: 40px; 
+            gap: 30px; 
+            animation: fadeInUp 0.8s ease; 
+        }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Control Panel - Glassmorphism */
+        .control-panel { 
+            background: #1A112E; 
+            padding: 35px; 
+            border-radius: 24px; 
+            width: 320px; 
+            border: 1px solid rgba(163, 230, 53, 0.2);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5); 
+        }
+
+        /* Canvas Area */
+        .canvas-area { 
+            background: #07070c; 
+            padding: 25px; 
+            border-radius: 24px; 
+            flex-grow: 1; 
+            max-width: 900px; 
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8); 
+            text-align: center; 
+        }
+
+        .slider-group { margin-bottom: 25px; text-align: left; }
+        
+        .slider-group label { 
+            display: flex; 
+            justify-content: space-between;
+            margin-bottom: 12px; 
+            font-weight: 600; 
+            color: #A3E635; 
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Neon Range Slider */
+        input[type="range"] { 
+            width: 100%; 
+            accent-color: #A3E635; 
+            cursor: pointer; 
+            background: #333;
+            height: 6px;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        /* Action Buttons */
+        .action-btn { 
+            background: #A3E635; 
+            color: #000; 
+            border: none; 
+            padding: 14px 25px; 
+            border-radius: 12px; 
+            font-weight: 800; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            width: 100%; 
+            margin-top: 12px; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .action-btn:hover { 
+            background: #b4f050; 
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(163, 230, 53, 0.3);
+        }
+
+        .reset-btn {
+            background: transparent;
+            border: 1.5px solid #444;
+            color: #888;
+        }
+
+        .reset-btn:hover {
+            border-color: #ff4757;
+            color: #ff4757;
+            background: rgba(255, 71, 87, 0.05);
+        }
+
+        /* Comparison Slider Fix */
+        img-comparison-slider {
+            border-radius: 15px;
+            overflow: hidden;
+            outline: none;
+            max-width: 100%;
+        }
+
+        #uploadStage { color: #555; }
+        #uploadStage h3 { color: white; margin-top: 15px; }
+        
+        #editorUI { display: none; width: 100%; }
+
+        .header-mini {
+            position: absolute;
+            top: 20px;
+            left: 40px;
+        }
+        .header-mini a {
+            color: #A3E635;
+            text-decoration: none;
+            font-weight: 900;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-mini">
+        <a href="/home">MJart</a>
+    </div>
+
+    <div class="editor-wrapper">
+        <div class="control-panel">
+            <h2 style="color: #fff; margin-bottom: 30px; font-size: 1.5rem;">AI Controls</h2>
+            
+            <div class="slider-group">
+                <label>Brightness <span id="val-b">100%</span></label>
+                <input type="range" id="brightness" min="0" max="200" value="100">
+            </div>
+            <div class="slider-group">
+                <label>Contrast <span id="val-c">100%</span></label>
+                <input type="range" id="contrast" min="0" max="200" value="100">
+            </div>
+            <div class="slider-group">
+                <label>Saturation <span id="val-s">100%</span></label>
+                <input type="range" id="saturation" min="0" max="200" value="100">
+            </div>
+
+            <button class="action-btn" id="downloadBtn"><i class="fas fa-download"></i> Export Pro</button>
+            <button class="action-btn reset-btn" onclick="resetFilters()">Reset Lab</button>
+        </div>
+
+        <div class="canvas-area">
+            <div id="uploadStage">
+                <div style="border: 2px dashed #333; padding: 60px; border-radius: 20px;">
+                    <i class="fas fa-cloud-upload-alt fa-4x" style="color: #A3E635; margin-bottom: 20px; opacity: 0.5;"></i>
+                    <h3>Ready for Magic?</h3>
+                    <p>Drop your photo here or click to browse</p>
+                    <input type="file" id="imageInput" hidden accept="image/*">
+                    <button class="action-btn" style="width: auto; padding: 12px 30px;" onclick="document.getElementById('imageInput').click()">Select Photo</button>
+                </div>
+            </div>
+
+            <div id="editorUI">
+                <img-comparison-slider>
+                    <img slot="first" id="originalView" style="width: 100%;" alt="Original">
+                    <img slot="second" id="editedView" style="width: 100%;" alt="Edited">
+                </img-comparison-slider>
+                <p style="margin-top: 15px; color: #555; font-size: 0.8rem;">Slide to compare Before & After</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const uploadStage = document.getElementById('uploadStage');
+        const editorUI = document.getElementById('editorUI');
+        const originalView = document.getElementById('originalView');
+        const editedView = document.getElementById('editedView');
+        const sliders = document.querySelectorAll('input[type="range"]');
+
+        imageInput.onchange = function() {
+            const file = this.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                originalView.src = url;
+                editedView.src = url;
+                uploadStage.style.display = 'none';
+                editorUI.style.display = 'block';
+            }
+        };
+
+        function applyFilters() {
+            const b = document.getElementById('brightness').value;
+            const c = document.getElementById('contrast').value;
+            const s = document.getElementById('saturation').value;
+            
+            // Update labels
+            document.getElementById('val-b').innerText = b + "%";
+            document.getElementById('val-c').innerText = c + "%";
+            document.getElementById('val-s').innerText = s + "%";
+
+            editedView.style.filter = `brightness(${b}%) contrast(${c}%) saturate(${s}%)`;
+        }
+
+        sliders.forEach(slider => slider.addEventListener('input', applyFilters));
+
+        function resetFilters() {
+            sliders.forEach(slider => slider.value = 100);
+            applyFilters();
+        }
+
+        document.getElementById('downloadBtn').onclick = function() {
+            if(!editedView.src) return alert("Please upload an image first!");
+            
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = editedView.naturalWidth;
+            canvas.height = editedView.naturalHeight;
+            ctx.filter = editedView.style.filter;
+            ctx.drawImage(editedView, 0, 0);
+            
+            const link = document.createElement('a');
+            link.download = `MJart_AI_Export_${Date.now()}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        };
+    </script>
+</body>
+</html>

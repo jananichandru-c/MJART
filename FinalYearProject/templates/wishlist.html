@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist - MJart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* Cyber-Dark Wishlist Styles */
+        body {
+            background-color: #0F0F1E !important;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+        }
+
+        .content-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            min-height: calc(100vh - 200px);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, #A3E635);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            color: #A3E635;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        /* Glassmorphism Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            background: #1A112E;
+            border-radius: 24px;
+            border: 1px dashed rgba(163, 230, 53, 0.3);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .empty-state-icon {
+            font-size: 5rem;
+            color: #A3E635;
+            margin-bottom: 25px;
+            filter: drop-shadow(0 0 15px rgba(163, 230, 53, 0.4));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .empty-state h2 {
+            font-size: 1.8rem;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .empty-state p {
+            color: #888;
+            margin-bottom: 35px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .empty-state-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background-color: #A3E635;
+            color: #000;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .empty-state-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(163, 230, 53, 0.4);
+            background-color: #b4f050;
+        }
+
+        /* Wishlist Items Grid */
+        .wishlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .wishlist-item {
+            background: #1A112E;
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            transition: 0.4s;
+        }
+
+        .wishlist-item:hover {
+            border-color: #A3E635;
+            transform: translateY(-8px);
+        }
+
+        .wishlist-item-image {
+            width: 100%;
+            height: 200px;
+            background: #0F0F1E;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #444;
+            font-size: 3rem;
+        }
+
+        .wishlist-item-info {
+            padding: 20px;
+        }
+
+        .wishlist-item-title {
+            color: white;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .wishlist-item-category {
+            color: #A3E635;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid #e74c3c;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            color: #e74c3c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+
+        .remove-btn:hover {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .back-to-home { text-align: center; margin-top: 40px; padding-bottom: 60px; }
+        .back-to-home a { color: #666; text-decoration: none; font-size: 0.95rem; }
+        .back-to-home a:hover { color: #A3E635; }
+        
+        /* Header Sync */
+        .header { background: #1A112E !important; border-bottom: 1px solid #333; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="header-logo">
+                <a href="/home" style="color: #A3E635; font-weight: 900; font-size: 1.8rem; text-decoration: none;">MJart</a>
+            </div>
+            <div class="header-right">
+                <button class="icon-btn"><i class="fas fa-bell"></i></button>
+                <button class="icon-btn"><i class="fas fa-user-circle"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <div class="content-container">
+        <div class="page-header">
+            <h1>Your <span style="color:white">Vault</span></h1>
+            <p>Saved Masterpieces & Templates</p>
+        </div>
+
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="fas fa-heart"></i>
+            </div>
+            <h2>The Vault is Empty</h2>
+            <p>You haven't saved any designs yet. Start exploring our pro templates to fill your collection!</p>
+            <a href="/home" class="empty-state-btn">
+                <i class="fas fa-rocket"></i> Start Exploring
+            </a>
+        </div>
+
+        <div class="wishlist-grid" style="display: none;">
+            <div class="wishlist-item">
+                <button class="remove-btn"><i class="fas fa-trash"></i></button>
+                <div class="wishlist-item-image"><i class="fas fa-palette"></i></div>
+                <div class="wishlist-item-info">
+                    <div class="wishlist-item-title">Cyberpunk Poster</div>
+                    <div class="wishlist-item-category">UI DESIGN</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="back-to-home">
+        <a href="/home">← Back to Explorer</a>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

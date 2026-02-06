@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MJart - Design Selection | Photo Editing Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Base Dark Theme */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0F0F1E !important; /* Dark Navy */
+            font-family: 'Segoe UI', sans-serif;
+            color: 1A112E;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: #1A112E !important;
+            padding: 15px 40px;
+            border-bottom: 1px solid #333;
+        }
+
+        .header-logo a {
+            color: #A3E635 !important; /* Neon Green */
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .search-input {
+            background: #0F0F1E !important;
+            border: 1px solid #444 !important;
+            color: white !important;
+            padding: 10px 20px;
+            border-radius: 25px;
+            width: 300px;
+        }
+
+        .search-btn {
+            background: #A3E635 !important;
+            color: black !important;
+            border-radius: 50%;
+            border: none;
+            padding: 10px;
+            margin-left: -45px;
+            cursor: pointer;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .icon-btn:hover { color: #A3E635; }
+
+        /* Main Section */
+        .design-selection-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 20px;
+        }
+
+        .design-title {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .design-subtitle {
+            color: #A3E635;
+            margin-bottom: 50px;
+            font-size: 1.1rem;
+        }
+
+        /* Design Folders Grid */
+        .design-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .design-folder {
+            background: #1A112E;
+            border: 1px solid #333;
+            border-radius: 20px;
+            padding: 40px 20px;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .folder-icon {
+            font-size: 3rem;
+            color: #A3E635;
+            transition: 0.4s;
+        }
+
+        .folder-name {
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Hover Effects */
+        .design-folder:hover {
+            transform: translateY(-10px);
+            border-color: #A3E635;
+            box-shadow: 0 10px 40px rgba(163, 230, 53, 0.15);
+            background: #251a3d;
+        }
+
+        .design-folder:hover .folder-icon {
+            transform: scale(1.2);
+            text-shadow: 0 0 15px rgba(163, 230, 53, 0.5);
+        }
+
+        /* Footer Button */
+        .back-home-footer {
+            margin-top: 50px;
+            text-align: center;
+            padding-bottom: 40px;
+        }
+
+        .back-home-btn {
+            color: #000000;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .back-home-btn:hover {
+            color: #A3E635;
+        }
+
+        /* Notification Badge */
+        .notification-badge {
+            background: #ff4444;
+            color: rgb(14, 11, 11);
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 50%;
+            position: absolute;
+            margin-left: -10px;
+            margin-top: -5px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container" style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="header-logo">
+                <a href="/home">MJart</a>
+            </div>
+
+            <div class="header-search" style="display: flex; align-items: center;">
+                <input type="text" placeholder="Search templates..." class="search-input">
+                <button class="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+
+            <div class="header-right" style="display: flex; gap: 20px;">
+                <button class="icon-btn"><i class="fas fa-bell"></i><span class="notification-badge">3</span></button>
+                <button class="icon-btn"><i class="fas fa-user-circle"></i></button>
+                <button class="icon-btn" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="design-selection-page">
+        <h1 class="design-title">Choose Your <span style="color: #A3E635;">Design Tool</span></h1>
+        <p class="design-subtitle">Select a tool to start creating your masterpiece</p>
+
+        <div class="design-grid">
+            <a href="/templates-editor" class="design-folder">
+                <div class="folder-icon"><i class="fas fa-images"></i></div>
+                <div class="folder-name">Templates</div>
+            </a>
+
+            <a href="/collage-editor" class="design-folder">
+                <div class="folder-icon"><i class="fas fa-th"></i></div>
+                <div class="folder-name">Collage</div>
+            </a>
+
+            <a href="/bg-remover-editor" class="design-folder">
+                <div class="folder-icon"><i class="fas fa-magic"></i></div>
+                <div class="folder-name">BG Remover</div>
+            </a>
+
+            <a href="/ai-photo-editor" class="design-folder">
+                <div class="folder-icon"><i class="fas fa-sliders-h"></i></div>
+                <div class="folder-name">AI Photo Editor</div>
+            </a>
+
+            <a href="/image-enhancer-editor" class="design-folder">
+                <div class="folder-icon"><i class="fas fa-star"></i></div>
+                <div class="folder-name">Enhancer</div>
+            </a>
+
+            <a href="/ai-image-generator-editor" class="design-folder">
+                <div class="folder-icon"><i class="fas fa-wand-magic-sparkles"></i></div>
+                <div class="folder-name">AI Generator</div>
+            </a>
+        </div>
+    </main>
+
+    <footer class="back-home-footer">
+        <a href="/home" class="back-home-btn">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

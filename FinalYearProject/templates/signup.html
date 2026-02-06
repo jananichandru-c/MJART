@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - MJart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reusing your high-end dark theme */
+        body {
+            margin: 0; padding: 0;
+            background: radial-gradient(circle at center, #1A112E, #0F0F1E) !important;
+            font-family: 'Segoe UI', sans-serif; color: white; min-height: 100vh;
+        }
+        .auth-container { display: flex; justify-content: center; align-items: center; padding: 40px 20px; }
+        .auth-card {
+            background: rgba(26, 17, 46, 0.8); backdrop-filter: blur(10px);
+            border-radius: 24px; border: 1px solid rgba(163, 230, 53, 0.1);
+            padding: 40px; max-width: 500px; width: 100%;
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        .auth-header { text-align: center; margin-bottom: 30px; }
+        .auth-header h1 { font-size: 2.5rem; color: white; margin-bottom: 8px; font-weight: 800; }
+        .auth-header p { color: #A3E635; font-size: 1rem; }
+        
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .form-group { margin-bottom: 20px; }
+        .full-width { grid-column: span 2; }
+        
+        .form-group label { display: block; margin-bottom: 8px; color: #BBB; font-size: 0.85rem; }
+        .form-group input, .form-group select {
+            width: 100%; padding: 12px; background: rgba(15, 15, 30, 0.7);
+            border: 1px solid #444; border-radius: 10px; color: white; box-sizing: border-box;
+        }
+        .form-group input:focus { outline: none; border-color: #A3E635; background: rgba(163, 230, 53, 0.05); }
+        
+        .signup-btn {
+            width: 100%; padding: 16px; background: #A3E635; color: #000;
+            border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 800;
+            cursor: pointer; transition: 0.3s; margin-top: 10px;
+        }
+        .signup-btn:hover { background: #b4f050; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(163, 230, 53, 0.4); }
+        
+        .login-link { text-align: center; margin-top: 20px; color: #888; font-size: 0.9rem; }
+        .login-link a { color: #A3E635; text-decoration: none; font-weight: 700; }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>Create Account</h1>
+                <p>Join the MJart creative community</p>
+            </div>
+
+            <form id="signupForm">
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>Full Name</label>
+                        <input type="text" id="name" placeholder="John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Date of Birth</label>
+                        <input type="date" id="dob" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select id="gender" style="background: #0f0f1e; color: white; border: 1px solid #444; border-radius: 10px; padding: 12px;">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Mobile Number</label>
+                        <input type="tel" id="mobile" placeholder="+1 234 567 890" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Email Address</label>
+                        <input type="email" id="email" placeholder="name@example.com" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Password</label>
+                        <input type="password" id="password" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="signup-btn">Create Account</button>
+            </form>
+
+            <div class="login-link">
+                Already have an account? <a href="/login">Sign In</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('signupForm').onsubmit = function(e) {
+            e.preventDefault();
+            const newUser = {
+                name: document.getElementById('name').value,
+                dob: document.getElementById('dob').value,
+                gender: document.getElementById('gender').value,
+                mobile: document.getElementById('mobile').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value
+            };
+
+            let users = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+            users.push(newUser);
+            localStorage.setItem('registeredUsers', JSON.stringify(users));
+            
+            alert("Account created successfully!");
+            window.location.href = "/login";
+        };
+    </script>
+</body>
+</html>

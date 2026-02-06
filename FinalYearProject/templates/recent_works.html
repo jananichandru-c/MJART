@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recent Works - MJart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* Modern Dark Theme Base */
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0F0F1E !important;
+            font-family: 'Segoe UI', sans-serif;
+            color: white;
+            min-height: 100vh;
+        }
+
+        .content-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #fff, #A3E635);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-header p {
+            color: #A3E635;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        /* Dark Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 40px;
+            background: #1A112E;
+            border-radius: 24px;
+            border: 1px dashed rgba(163, 230, 53, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .empty-state-icon {
+            font-size: 5rem;
+            color: #A3E635;
+            margin-bottom: 25px;
+            filter: drop-shadow(0 0 15px rgba(163, 230, 53, 0.4));
+        }
+
+        .empty-state h2 {
+            font-size: 1.8rem;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .empty-state p {
+            color: #888;
+            margin-bottom: 35px;
+            font-size: 1.1rem;
+        }
+
+        .empty-state-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 35px;
+            background-color: #A3E635;
+            color: black;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 800;
+            transition: all 0.3s ease;
+        }
+
+        .empty-state-btn:hover {
+            background-color: #b4f050;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(163, 230, 53, 0.3);
+        }
+
+        /* Works Grid Styling */
+        .works-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .work-card {
+            background: #1A112E;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .work-card:hover {
+            transform: translateY(-10px);
+            border-color: #A3E635;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+        }
+
+        .work-card-image {
+            width: 100%;
+            height: 200px;
+            background: #0F0F1E;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .work-card-image i {
+            font-size: 3rem;
+            color: #333;
+        }
+
+        .work-card-info {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .work-card-title {
+            font-size: 1.1rem;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .work-card-date {
+            font-size: 0.85rem;
+            color: #A3E635;
+            opacity: 0.8;
+        }
+
+        .back-to-home {
+            text-align: center;
+            margin-top: 40px;
+            padding-bottom: 60px;
+        }
+
+        .back-to-home a {
+            color: #666;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .back-to-home a:hover { color: #A3E635; }
+
+        /* Header Fix */
+        .header { background: #1A112E !important; border-bottom: 1px solid #333; padding: 15px 40px; }
+        .header-logo a { color: #A3E635 !important; font-weight: 900; text-decoration: none; font-size: 1.8rem; }
+        .search-input { background: #0F0F1E !important; border: 1px solid #444 !important; color: white !important; border-radius: 20px; padding: 8px 15px; }
+        .search-btn { background: #A3E635 !important; color: black !important; border-radius: 50%; border: none; padding: 8px 12px; margin-left: -40px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container" style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="header-logo">
+                <a href="/home">MJart</a>
+            </div>
+            <div class="header-search">
+                <input type="text" placeholder="Search your works..." class="search-input">
+                <button class="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="header-right" style="display: flex; gap: 20px; color: #888;">
+                <i class="fas fa-bell"></i>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="content-container">
+        <div class="page-header">
+            <h1>Recent <span style="color: white;">Works</span></h1>
+            <p>Your creative journey, preserved in pixels</p>
+        </div>
+
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="fas fa-folder-open"></i>
+            </div>
+            <h2>Gallery is Empty</h2>
+            <p>Looks like you haven't started any projects yet. Let's create something amazing!</p>
+            <a href="/design-selection" class="empty-state-btn">
+                <i class="fas fa-plus-circle"></i> New Project
+            </a>
+        </div>
+
+        </div>
+
+    <div class="back-to-home">
+        <a href="/home">← Back to Explorer</a>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

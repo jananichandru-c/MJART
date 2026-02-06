@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - MJart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* Modern Dark Theme Base */
+        body {
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle at center, #1A112E, #0F0F1E) !important;
+            font-family: 'Segoe UI', sans-serif;
+            color: white;
+            min-height: 100vh;
+        }
+
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 20px;
+        }
+
+        /* Glassmorphism Card */
+        .auth-card {
+            background: rgba(26, 17, 46, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            border: 1px solid rgba(163, 230, 53, 0.1);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            padding: 50px;
+            max-width: 450px;
+            width: 100%;
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .auth-header h1 {
+            font-size: 2.8rem;
+            color: white;
+            margin-bottom: 8px;
+            font-weight: 800;
+        }
+
+        .auth-header p {
+            color: #A3E635; /* Neon Green */
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Form Styling */
+        .form-group { margin-bottom: 25px; }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #BBB;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(15, 15, 30, 0.7);
+            border: 1px solid #444;
+            border-radius: 12px;
+            font-size: 1rem;
+            color: white;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #A3E635;
+            background: rgba(163, 230, 53, 0.05);
+            box-shadow: 0 0 15px rgba(163, 230, 53, 0.1);
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #888;
+        }
+
+        .remember-me input[type="checkbox"] {
+            accent-color: #A3E635;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            color: #A3E635;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .forgot-password:hover { text-shadow: 0 0 8px rgba(163, 230, 53, 0.5); }
+
+        /* Neon Button */
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: #A3E635;
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(163, 230, 53, 0.2);
+        }
+
+        .login-btn:hover {
+            background: #b4f050;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(163, 230, 53, 0.4);
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 30px;
+            color: #888;
+            font-size: 0.95rem;
+        }
+
+        .signup-link a {
+            color: #A3E635;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .back-to-home {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .back-to-home a {
+            color: #555;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        .back-to-home a:hover { color: #A3E635; }
+
+        /* Header Fix for Login Page */
+        .header { background: #1A112E !important; border-bottom: 1px solid #333; padding: 15px 40px; }
+        .header-logo a { color: #A3E635 !important; font-weight: 900; text-decoration: none; font-size: 1.8rem; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container" style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="header-logo">
+                <a href="/home">MJart</a>
+            </div>
+            <div class="header-right">
+                <a href="/home" style="color: #888; text-decoration: none; font-size: 0.9rem;">Back to Explorer</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>Login</h1>
+                <p>Welcome back to MJart</p>
+            </div>
+
+            <form method="POST" action="/login">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="name@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                </div>
+
+                <div class="form-options">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember" name="remember">
+                        <label for="remember">Keep me logged in</label>
+                    </div>
+                    <a href="#" class="forgot-password">Forgot?</a>
+                </div>
+
+                <button type="submit" class="login-btn">Sign In</button>
+            </form>
+
+            <div class="signup-link">
+                New to MJart? <a href="/signup">Create an account</a>
+            </div>
+
+            <div class="back-to-home">
+                <a href="/home">← Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

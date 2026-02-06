@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MJART - Pro Interactive Editor</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #A3E635; /* Neon Green from logo */
+            --bg: #0F0F1E;
+            --panel: #1A1A2E;
+            --border: #2D2D3F;
+            --gold: #FFD700;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- Sidebar & Layout --- */
+        .sidebar { width: 85px; background: #151525; border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding: 20px 0; z-index: 100; }
+        .side-tool { margin-bottom: 25px; cursor: pointer; color: #888; text-align: center; width: 100%; transition: 0.3s; }
+        .side-tool.active, .side-tool:hover { color: var(--primary); }
+        .side-tool i { font-size: 1.5rem; display: block; margin-bottom: 5px; }
+        .side-tool span { font-size: 0.6rem; text-transform: uppercase; }
+
+        .workspace { flex: 1; display: flex; flex-direction: column; }
+        
+        header {
+            height: 65px;
+            background: var(--panel);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* --- Panels --- */
+        .assets-panel { width: 320px; background: #151525; padding: 20px; overflow-y: auto; border-right: 1px solid var(--border); }
+        .hidden-panel { display: none; }
+
+        /* Template Grid */
+        .t-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .t-card { background: var(--panel); border-radius: 10px; overflow: hidden; cursor: pointer; position: relative; border: 1px solid transparent; }
+        .t-card:hover { border-color: var(--primary); }
+        .t-card img { width: 100%; height: 110px; object-fit: cover; }
+        .pro-badge { position: absolute; bottom: 5px; right: 5px; color: var(--gold); font-size: 12px; }
+
+        /* --- Canvas Area --- */
+        .canvas-area { flex: 1; background: #0b0b14; display: flex; align-items: center; justify-content: center; position: relative; }
+        .canvas-box { 
+            width: 500px; height: 500px; background: #fff; 
+            box-shadow: 0 0 60px rgba(0,0,0,0.8); 
+            position: relative; overflow: hidden; 
+            background-size: cover; background-position: center;
+        }
+
+        /* Draggable Elements */
+        .draggable-img, .draggable-text { position: absolute; cursor: move; border: 2px solid transparent; }
+        .draggable-img { max-width: 150px; }
+        .draggable-text { color: #000; font-size: 24px; font-weight: bold; padding: 5px; min-width: 50px; outline: none; }
+        .draggable-img:hover, .draggable-text:hover { border-color: var(--primary); }
+
+        .upload-btn {
+            width: 100%; padding: 12px; background: var(--primary); color: black; 
+            border: none; border-radius: 8px; font-weight: bold; cursor: pointer;
+        }
+
+        /* Action Buttons Styling */
+        .action-btn {
+            background: #2D2D3F; color: white; border: none; padding: 8px 12px; 
+            border-radius: 5px; cursor: pointer; margin-right: 5px; transition: 0.2s;
+        }
+        .action-btn:hover { background: #3d3d52; }
+        .btn-clear { color: #ff4d4d; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="side-tool active" onclick="showPanel('temp')"><i class="fas fa-th-large"></i><span>Layouts</span></div>
+        <div class="side-tool" onclick="showPanel('upload')"><i class="fas fa-cloud-upload-alt"></i><span>Uploads</span></div>
+        <div class="side-tool" onclick="addText()"><i class="fas fa-font"></i><span>Text</span></div>
+    </aside>
+
+    <div class="workspace">
+        <header>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="color: var(--primary); font-weight: 900; font-size: 1.5rem;">MJART</span>
+                <div style="margin-left: 20px; display: flex;">
+                    <button class="action-btn" onclick="undo()" title="Undo"><i class="fas fa-undo"></i></button>
+                    <button class="action-btn" onclick="redo()" title="Redo"><i class="fas fa-redo"></i></button>
+                    <button class="action-btn btn-clear" onclick="clearCanvas()" title="Clear All"><i class="fas fa-trash-alt"></i></button>
+                </div>
+            </div>
+            <button class="upload-btn" style="width: auto; padding: 8px 20px;" onclick="downloadCanvas()">Export</button>
+        </header>
+
+        <div style="display: flex; flex: 1; overflow: hidden;">
+            <div id="panel-temp" class="assets-panel">
+                <p style="color: var(--primary); font-weight: bold;">PRO TEMPLATES</p>
+                <div class="t-grid">
+                    <div class="t-card" onclick="setBg('https://images.unsplash.com/photo-1507525428034-b723cf961d3e')"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=200"><div class="pro-badge"><i class="fas fa-crown"></i></div></div>
+                    <div class="t-card" onclick="setBg('https://images.unsplash.com/photo-1511795409834-ef04bbd61622')"><img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=200"></div>
+                    <div class="t-card" onclick="setBg('https://images.unsplash.com/photo-1441974231531-c6227db76b6e')"><img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=200"><div class="pro-badge"><i class="fas fa-crown"></i></div></div>
+                    <div class="t-card" onclick="setBg('https://images.unsplash.com/photo-1523275335684-37898b6baf30')"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200"></div>
+                    <div class="t-card" onclick="setBg('https://images.unsplash.com/photo-1531746020798-e6953c6e8e04')"><img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=200"><div class="pro-badge"><i class="fas fa-crown"></i></div></div>
+                    <div class="t-card" onclick="setBg('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab')"><img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=200"></div>
+                    <div class="t-card" onclick="setBg('https://images.unsplash.com/photo-1483985988355-763728e1935b')"><img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=200"><div class="pro-badge"><i class="fas fa-crown"></i></div></div>
+                    <div class="t-card" onclick="setBg('https://images.unsplash.com/photo-1550745165-9bc0b252726f')"><img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=200"></div>
+                    <div class="t-card" onclick="setBg('https://images.unsplash.com/photo-1509042239860-f550ce710b93')"><img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200"><div class="pro-badge"><i class="fas fa-crown"></i></div></div>
+                    <div class="t-card" onclick="setBg('https://images.unsplash.com/photo-1517836357463-d25dfeac3438')"><img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=200"></div>
+                </div>
+            </div>
+
+            <div id="panel-upload" class="assets-panel hidden-panel">
+                <p style="color: var(--primary); font-weight: bold;">MY MEDIA</p>
+                <input type="file" id="imgInp" accept="image/*" style="display:none;" onchange="doUpload(this)">
+                <button class="upload-btn" onclick="document.getElementById('imgInp').click()">
+                    <i class="fas fa-plus"></i> Upload Image
+                </button>
+                <div id="uploadList" style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
+            </div>
+
+            <div class="canvas-area">
+                <div class="canvas-box" id="mainCanvas">
+                    <p id="hint" style="color: #999; text-align: center; margin-top: 45%;">Select a template or upload image (Double-click to delete items)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+        const canvas = document.getElementById('mainCanvas');
+        let history = [];
+        let redoStack = [];
+
+        function saveState() {
+            history.push({
+                html: canvas.innerHTML,
+                bg: canvas.style.backgroundImage
+            });
+            redoStack = []; 
+        }
+
+        function showPanel(id) {
+            document.querySelectorAll('.assets-panel').forEach(p => p.classList.add('hidden-panel'));
+            document.querySelectorAll('.side-tool').forEach(t => t.classList.remove('active'));
+            document.getElementById('panel-' + id).classList.remove('hidden-panel');
+            if(window.event) window.event.currentTarget.classList.add('active');
+        }
+
+        function setBg(url) {
+            saveState();
+            document.getElementById('hint').style.display = 'none';
+            canvas.style.backgroundImage = `url('${url}')`;
+        }
+
+        function doUpload(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    saveState();
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'draggable-img';
+                    img.style.top = '50px';
+                    img.style.left = '50px';
+                    img.ondblclick = function() { saveState(); this.remove(); };
+                    makeDrag(img);
+                    canvas.appendChild(img);
+                    document.getElementById('hint').style.display = 'none';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // --- NEW TEXT FUNCTION ---
+        function addText() {
+            saveState();
+            const text = document.createElement('div');
+            text.className = 'draggable-text';
+            text.contentEditable = true;
+            text.innerText = 'TYPE HERE';
+            text.style.top = '50px';
+            text.style.left = '50px';
+            text.onblur = () => saveState(); // Save state when user finishes typing
+            text.ondblclick = function() { saveState(); this.remove(); };
+            makeDrag(text);
+            canvas.appendChild(text);
+            document.getElementById('hint').style.display = 'none';
+        }
+
+        function makeDrag(el) {
+            let p1 = 0, p2 = 0, p3 = 0, p4 = 0;
+            el.onmousedown = (e) => {
+                if(document.activeElement === el) return; // Allow typing if text is focused
+                e.preventDefault();
+                p3 = e.clientX; p4 = e.clientY;
+                document.onmouseup = () => { 
+                    saveState();
+                    document.onmouseup = null; 
+                    document.onmousemove = null; 
+                };
+                document.onmousemove = (e) => {
+                    p1 = p3 - e.clientX; p2 = p4 - e.clientY;
+                    p3 = e.clientX; p4 = e.clientY;
+                    el.style.top = (el.offsetTop - p2) + "px";
+                    el.style.left = (el.offsetLeft - p1) + "px";
+                };
+            };
+        }
+
+        function undo() {
+            if (history.length > 0) {
+                redoStack.push({ html: canvas.innerHTML, bg: canvas.style.backgroundImage });
+                const last = history.pop();
+                canvas.innerHTML = last.html;
+                canvas.style.backgroundImage = last.bg;
+                rebindElements();
+            }
+        }
+
+        function redo() {
+            if (redoStack.length > 0) {
+                history.push({ html: canvas.innerHTML, bg: canvas.style.backgroundImage });
+                const next = redoStack.pop();
+                canvas.innerHTML = next.html;
+                canvas.style.backgroundImage = next.bg;
+                rebindElements();
+            }
+        }
+
+        function clearCanvas() {
+            if(confirm("Are you sure you want to clear the canvas?")) {
+                saveState();
+                canvas.querySelectorAll('.draggable-img, .draggable-text').forEach(el => el.remove());
+                canvas.style.backgroundImage = 'none';
+                document.getElementById('hint').style.display = 'block';
+            }
+        }
+
+        function rebindElements() {
+            canvas.querySelectorAll('.draggable-img, .draggable-text').forEach(el => {
+                makeDrag(el);
+                el.ondblclick = function() { saveState(); this.remove(); };
+            });
+            const hasContent = canvas.querySelectorAll('.draggable-img, .draggable-text').length > 0;
+            const hasBg = canvas.style.backgroundImage && canvas.style.backgroundImage !== 'none';
+            document.getElementById('hint').style.display = (hasContent || hasBg) ? 'none' : 'block';
+        }
+
+        function downloadCanvas() {
+            const hint = document.getElementById('hint');
+            const hintWasVisible = hint.style.display !== 'none';
+            if (hintWasVisible) hint.style.display = 'none';
+
+            html2canvas(canvas, {
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: "#ffffff"
+            }).then(resultCanvas => {
+                const link = document.createElement('a');
+                link.download = 'mjart-export.png';
+                link.href = resultCanvas.toDataURL("image/png");
+                link.click();
+                if (hintWasVisible) hint.style.display = 'block';
+            });
+        }
+    </script>
+</body>
+</html>

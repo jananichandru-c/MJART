@@ -1,0 +1,224 @@
+/* ============================================
+   SPLASH PAGE STYLES - MJart
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', 'Poppins', sans-serif;
+    background: linear-gradient(135deg, 
+        #f5f0e8 0%, 
+        #ebe4d8 25%, 
+        #f0ebe3 50%, 
+        #e8e0d4 75%, 
+        #f5f0e8 100%);
+    min-height: 100vh;
+    color: #000000;
+}
+
+/* ============================================
+   SPLASH CONTAINER
+   ============================================ */
+
+.splash-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.splash-content {
+    text-align: center;
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   SPLASH LOGO & ICON
+   ============================================ */
+
+.splash-logo-container {
+    margin-bottom: 30px;
+    animation: scaleIn 0.8s ease-out;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.splash-icon {
+    width: 100px;
+    height: 100px;
+    animation: floatIcon 3s ease-in-out infinite;
+}
+
+@keyframes floatIcon {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+/* ============================================
+   SPLASH TITLE & SUBTITLE
+   ============================================ */
+
+.splash-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    animation: slideDown 0.8s ease-out 0.2s both;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.splash-subtitle {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.2rem;
+    color: #666666;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 300;
+    margin-bottom: 50px;
+    animation: slideUp 0.8s ease-out 0.4s both;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   LOADING ANIMATION
+   ============================================ */
+
+.splash-loader {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    animation: slideUp 0.8s ease-out 0.6s both;
+}
+
+.splash-loader span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #000000;
+    animation: pulse 1.4s infinite;
+}
+
+.splash-loader span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.splash-loader span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes pulse {
+    0%, 60%, 100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+    30% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+/* ============================================
+   FADE OUT ANIMATION
+   ============================================ */
+
+.splash-container.fade-out {
+    animation: fadeOut 0.8s ease-out forwards;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media screen and (max-width: 768px) {
+    .splash-title {
+        font-size: 2.5rem;
+        letter-spacing: 2px;
+    }
+    
+    .splash-subtitle {
+        font-size: 1rem;
+        letter-spacing: 1px;
+    }
+    
+    .splash-icon {
+        width: 70px;
+        height: 70px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .splash-title {
+        font-size: 2rem;
+        letter-spacing: 1px;
+    }
+    
+    .splash-subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .splash-icon {
+        width: 50px;
+        height: 50px;
+    }
+}

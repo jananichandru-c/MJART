@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MJART Professional Editor</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #A3E635; 
+            --bg: #0F0F1E;
+            --panel: #1A1A2E;
+            --border: #2D2D3F;
+            --header-bg: #1A112E; 
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: white;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        /* --- Header Section --- */
+        header {
+            background: var(--header-bg);
+            padding: 0 30px;
+            height: 65px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            z-index: 10000;
+        }
+
+        /* Logo Wrapper with your Camera Image */
+        .logo-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 40px; /* Logo size control */
+            width: auto;
+            object-fit: contain; /* Error fixed here */
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--primary);
+            letter-spacing: 2px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .icon-btn {
+            position: relative;
+            cursor: pointer;
+            color: white;
+            transition: 0.3s;
+        }
+
+        .icon-btn:hover { color: var(--primary); }
+
+        .notif-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #FF3B30;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 10px;
+            font-weight: bold;
+            border: 2px solid var(--header-bg);
+        }
+
+        /* --- Dropdown Menus --- */
+        .mj-dropdown {
+            display: none;
+            position: absolute;
+            top: 55px;
+            right: 0;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            min-width: 220px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            z-index: 99999;
+            overflow: hidden;
+            animation: slideDown 0.2s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .mj-header {
+            padding: 12px 20px;
+            background: #252540;
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .mj-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            color: #ccc;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .mj-link:hover {
+            background: #2D2D3F;
+            color: var(--primary);
+        }
+
+        /* --- Main Layout --- */
+        .main-container {
+            display: flex;
+            height: calc(100vh - 65px);
+        }
+
+        .sidebar {
+            width: 320px;
+            background: #151525;
+            border-right: 1px solid var(--border);
+            padding: 20px;
+        }
+
+        .canvas-area {
+            flex: 1;
+            background: #0b0b14;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .editor-box {
+            width: 80%;
+            height: 80%;
+            background: white;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+
+        .hamburger-icon {
+            color: var(--primary);
+            font-size: 1.6rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="/" class="logo-wrapper">
+            <!-- Inline SVG logo fallback so the header shows even if static image is missing -->
+            <svg class="logo-img" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                <circle cx="32" cy="32" r="30" fill="none" stroke="#A3E635" stroke-width="2" />
+                <circle cx="22" cy="22" r="7" fill="#ffffff" opacity="0.9" />
+                <path d="M38 46 L26 34" stroke="#ffffff" stroke-width="3" stroke-linecap="round" />
+                <path d="M46 42 L50 38 L54 42" stroke="#A3E635" stroke-width="3" stroke-linecap="round" fill="none" />
+            </svg>
+            <span class="logo-text">MJART</span>
+        </a>
+
+        <div class="header-actions">
+            <div class="icon-btn" onclick="toggleMJMenu('notifDrop', event)">
+                <i class="fas fa-bell" style="font-size: 1.3rem;"></i>
+                <span class="notif-badge">3</span>
+                <div id="notifDrop" class="mj-dropdown">
+                    <div class="mj-header">Recent Activity</div>
+                    <div class="mj-link">New layout added!</div>
+                </div>
+            </div>
+
+            <div class="icon-btn">
+                <i class="fas fa-user-circle" style="font-size: 1.5rem;"></i>
+            </div>
+
+            <div class="icon-btn" onclick="toggleMJMenu('settingsDrop', event)">
+                <i class="fas fa-bars hamburger-icon"></i>
+                <div id="settingsDrop" class="mj-dropdown">
+                    <div class="mj-header">Quick Settings</div>
+                    <a href="#" class="mj-link"><i class="fas fa-user-cog"></i> Account Details</a>
+                    <a href="/logout" class="mj-link" style="color: #FF3B30;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <h2 style="color: var(--primary); font-size: 1rem;">DESIGN ASSETS</h2>
+            <p style="color: #888; font-size: 0.85rem;">Select tools to begin.</p>
+        </aside>
+
+        <main class="canvas-area">
+            <div class="editor-box">
+                <p style="font-weight: bold; color: #999;">Canvas Workspace</p>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleMJMenu(id, event) {
+            event.stopPropagation();
+            const menu = document.getElementById(id);
+            const isVisible = menu.style.display === 'block';
+            document.querySelectorAll('.mj-dropdown').forEach(m => m.style.display = 'none');
+            menu.style.display = isVisible ? 'none' : 'block';
+        }
+
+        window.onclick = function() {
+            document.querySelectorAll('.mj-dropdown').forEach(m => {
+                m.style.display = 'none';
+            });
+        }
+    </script>
+</body>
+</html>

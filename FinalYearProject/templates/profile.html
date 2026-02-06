@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body { background: #000; color: #fff; font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; }
+        .card { border: 1px solid #A2FF32; padding: 30px; border-radius: 15px; width: 350px; }
+        h2 { color: #A2FF32; }
+        .detail { margin: 15px 0; border-bottom: 1px solid #222; padding-bottom: 5px; }
+        label { color: #888; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Your Profile</h2>
+        <div id="profile-content"></div>
+        <button onclick="window.location.href='index.html'" style="background:#A2FF32; border:none; padding:10px; width:100%; cursor:pointer; font-weight:bold; margin-top:20px;">Back to Editor</button>
+    </div>
+    <script>
+        const user = JSON.parse(localStorage.getItem('loggedInUser'));
+        const content = document.getElementById('profile-content');
+        if(!user) {
+            content.innerHTML = "<p>No user logged in. Please Login first.</p>";
+        } else {
+            content.innerHTML = `
+                <div class="detail"><label>NAME</label><div>${user.name}</div></div>
+                <div class="detail"><label>GMAIL</label><div>${user.email}</div></div>
+                <div class="detail"><label>DOB</label><div>${user.dob}</div></div>
+                <div class="detail"><label>PHONE</label><div>${user.mobile}</div></div>
+            `;
+        }
+    </script>
+</body>
+</html>

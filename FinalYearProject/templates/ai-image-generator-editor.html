@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MJART - AI Image Generator</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #A3E635; /* Neon Green from MJART */
+            --bg-dark: #0F0F1E;
+            --card-bg: #1A1A2E;
+            --border: #2D2D3F;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* HEADER & LOGO SECTION */
+        .header-section {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .logo-circle {
+            width: 90px;
+            height: 90px;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            box-shadow: 0 0 20px rgba(163, 230, 53, 0.3);
+            background: rgba(163, 230, 53, 0.05);
+        }
+
+        .logo-circle svg {
+            width: 50px;
+            height: 50px;
+            stroke: var(--primary);
+        }
+
+        .brand-name {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin: 0;
+            letter-spacing: 8px;
+            text-shadow: 0 0 10px rgba(163, 230, 53, 0.2);
+        }
+
+        .tagline {
+            color: var(--primary);
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            font-weight: bold;
+            margin-top: 5px;
+            text-transform: uppercase;
+        }
+
+        /* MAIN DASHBOARD */
+        .container {
+            display: flex;
+            gap: 20px;
+            width: 90%;
+            max-width: 1200px;
+            margin-bottom: 50px;
+        }
+
+        /* LEFT PANEL: PROMPT AREA */
+        .generator-panel {
+            flex: 2;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+        }
+
+        .prompt-box {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .prompt-input {
+            flex: 1;
+            background: #0a0a16;
+            border: 1px solid var(--border);
+            color: white;
+            padding: 16px;
+            border-radius: 10px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .prompt-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(163, 230, 53, 0.1);
+        }
+
+        .btn-generate {
+            background: var(--primary);
+            color: black;
+            border: none;
+            padding: 0 30px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(163, 230, 53, 0.4);
+        }
+
+        /* CONTENT TYPES */
+        .section-title {
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .chips-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .type-chip {
+            background: #252540;
+            padding: 10px 22px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: 0.3s;
+        }
+
+        .type-chip:hover, .type-chip.active {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(163, 230, 53, 0.1);
+        }
+
+        /* PREVIEW AREA */
+        .preview-placeholder {
+            width: 100%;
+            height: 350px;
+            background: #0a0a16;
+            border: 1px dashed #333;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #444;
+        }
+
+        /* RIGHT PANEL: SETTINGS */
+        .settings-panel {
+            flex: 1;
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .setting-group { margin-bottom: 25px; }
+        .setting-group label {
+            display: block;
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 12px;
+        }
+
+        select {
+            width: 100%;
+            background: #0a0a16;
+            border: 1px solid var(--border);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header-section">
+        <div class="logo-circle">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
+            </svg>
+        </div>
+        <h1 class="brand-name">MJART</h1>
+        <div class="tagline">TRANSFORMING REALITY</div>
+    </header>
+
+    <div class="container">
+        
+        <div class="generator-panel">
+            <div class="prompt-box">
+                <input type="text" class="prompt-input" placeholder="Describe what you want to create in detail...">
+                <button class="btn-generate">Generate Image</button>
+            </div>
+
+            <div class="section-title">Add Content Type</div>
+            <div class="chips-wrapper">
+                <div class="type-chip active">Painting</div>
+                <div class="type-chip">Drawing</div>
+                <div class="type-chip">3D Render</div>
+                <div class="type-chip">Photography</div>
+                <div class="type-chip">Digital Art</div>
+            </div>
+
+            <div class="preview-placeholder">
+                <i class="fas fa-image" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                <p>Your AI creation will appear here</p>
+            </div>
+        </div>
+
+        <div class="settings-panel">
+            <div class="settings-header">
+                <h4 style="margin:0">Whole Image</h4>
+                <i class="fas fa-sliders-h" style="color: #444;"></i>
+            </div>
+
+            <div class="setting-group">
+                <label>Resolution (px)</label>
+                <select>
+                    <option>1024 x 1024 (1:1)</option>
+                    <option>1920 x 1080 (16:9)</option>
+                    <option>1080 x 1350 (4:5)</option>
+                </select>
+            </div>
+
+            <div class="setting-group">
+                <label>Art Style Strength</label>
+                <input type="range" min="0" max="100" value="75">
+            </div>
+
+            <div class="setting-group">
+                <label>Lighting Effect</label>
+                <input type="range" min="0" max="100" value="50">
+            </div>
+
+            <div class="setting-group">
+                <label>Color Vibrancy</label>
+                <input type="range" min="0" max="100" value="60">
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Content Type Chip Selection
+        const chips = document.querySelectorAll('.type-chip');
+        chips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                chips.forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+            });
+        });
+
+        // Generate Button Simulation
+        document.querySelector('.btn-generate').addEventListener('click', () => {
+            const preview = document.querySelector('.preview-placeholder');
+            preview.innerHTML = '<i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #A3E635;"></i><p style="margin-top:15px; color: #A3E635;">AI is dreaming up your image...</p>';
+            
+            // Simulating API response
+            setTimeout(() => {
+                alert("Backend API connect panna ready!");
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

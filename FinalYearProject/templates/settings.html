@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MJART - Professional Settings</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #A3E635;
+            --bg: #0F0F1E;
+            --panel: #1A1A2E;
+            --border: #2D2D3F;
+            --header-bg: #1A112E;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg) !important;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- Header Section --- */
+        header {
+            background: var(--header-bg);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-logo a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            position: relative;
+            cursor: pointer;
+            color: white;
+            font-size: 1.3rem;
+        }
+
+        /* --- Dropdown Logic --- */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 45px;
+            right: 0;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            min-width: 220px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            z-index: 1001;
+            overflow: hidden;
+        }
+
+        .dropdown-header {
+            padding: 12px 20px;
+            background: #252540;
+            color: var(--primary);
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .dropdown-item {
+            padding: 12px 20px;
+            color: #ccc;
+            text-decoration: none;
+            display: block;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .dropdown-item:hover {
+            background: var(--border);
+            color: var(--primary);
+        }
+
+        /* --- Settings UI --- */
+        .main-container {
+            max-width: 850px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title h1 {
+            font-size: 2.8rem;
+            margin-bottom: 5px;
+            background: linear-gradient(to bottom, #fff, var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .settings-card {
+            background: var(--panel);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .section {
+            padding: 30px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-header {
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .label-group {
+            flex: 1;
+        }
+
+        .label-main { font-weight: 600; font-size: 1rem; }
+        .label-sub { font-size: 0.85rem; color: #888; margin-top: 4px; }
+
+        /* --- Form Elements --- */
+        .input-box {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            outline: none;
+            width: 200px;
+        }
+
+        .select-box {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        /* Toggle Switch */
+        .switch {
+            width: 50px;
+            height: 26px;
+            background: #333;
+            border-radius: 15px;
+            position: relative;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .switch.active { background: var(--primary); }
+
+        .switch::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: 0.3s;
+        }
+
+        .switch.active::after { left: 27px; background: black; }
+
+        .save-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--primary);
+            border: none;
+            border-radius: 12px;
+            color: black;
+            font-weight: 800;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+
+        .save-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(163, 230, 53, 0.3); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-logo"><a href="/home">MJART</a></div>
+        <div class="header-right">
+            <a href="/home" class="icon-btn"><i class="fas fa-home"></i></a>
+            
+            <div class="icon-btn" onclick="toggleMJMenu('notifBox')">
+                <i class="fas fa-bell"></i>
+                <div id="notifBox" class="dropdown-menu">
+                    <div class="dropdown-header">Recent Notifications</div>
+                    <a href="#" class="dropdown-item">AI Render Completed</a>
+                </div>
+            </div>
+
+            <div class="icon-btn" onclick="toggleMJMenu('setBox')">
+                <i class="fas fa-bars" style="color: var(--primary);"></i>
+                <div id="setBox" class="dropdown-menu">
+                    <div class="dropdown-header">Quick Access</div>
+                    <a href="#" class="dropdown-item"><i class="fas fa-user"></i> My Profile</a>
+                    <a href="/logout" class="dropdown-item" style="color: #ff4757;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="page-title">
+            <h1>Settings</h1>
+            <p>Customize your MJART workspace</p>
+        </div>
+
+        <div class="settings-card">
+            <div class="section">
+                <div class="section-header"><i class="fas fa-brain"></i> AI Performance</div>
+                <div class="setting-row">
+                    <div class="label-group">
+                        <div class="label-main">Default AI Model</div>
+                        <div class="label-sub">Fusion v2.1 is optimized for speed and quality</div>
+                    </div>
+                    <select class="select-box">
+                        <option>Fusion v2.1 (Balanced)</option>
+                        <option>Realistic v4.0 (Pro)</option>
+                    </select>
+                </div>
+                <div class="setting-row">
+                    <div class="label-group">
+                        <div class="label-main">Auto-Upscaling</div>
+                        <div class="label-sub">Generate all images in 2K resolution</div>
+                    </div>
+                    <div class="switch active" onclick="this.classList.toggle('active')"></div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header"><i class="fas fa-user-circle"></i> User Profile</div>
+                <div class="setting-row">
+                    <div class="label-group">
+                        <div class="label-main">Username</div>
+                        <div class="label-sub">Your public MJART identifier</div>
+                    </div>
+                    <input type="text" class="input-box" value="Abinesh_Art">
+                </div>
+                <div class="setting-row">
+                    <div class="label-group">
+                        <div class="label-main">Private Mode</div>
+                        <div class="label-sub">Hide your creations from the community feed</div>
+                    </div>
+                    <div class="switch" onclick="this.classList.toggle('active')"></div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header"><i class="fas fa-palette"></i> Interface</div>
+                <div class="setting-row">
+                    <div class="label-group">
+                        <div class="label-main">UI Theme</div>
+                        <div class="label-sub">Switch between neon or classic dark</div>
+                    </div>
+                    <select class="select-box">
+                        <option>Midnight Neon</option>
+                        <option>Classic Dark</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button class="save-btn">SAVE ALL CHANGES</button>
+        </div>
+    </div>
+
+    <script>
+        // Dropdown Logic
+        function toggleMJMenu(id) {
+            const menus = document.querySelectorAll('.dropdown-menu');
+            menus.forEach(m => { if(m.id !== id) m.style.display = 'none'; });
+
+            const target = document.getElementById(id);
+            target.style.display = (target.style.display === 'block') ? 'none' : 'block';
+        }
+
+        // Close when clicking outside
+        window.onclick = function(event) {
+            if (!event.target.closest('.icon-btn')) {
+                document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
+            }
+        }
+    </script>
+</body>
+</html>

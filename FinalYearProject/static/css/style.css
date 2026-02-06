@@ -1,0 +1,401 @@
+/* ============================================
+   MJart - Main Stylesheet (UPDATED FOR DARK MODE)
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Base Dark Theme */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #0B0B14 !important; 
+    font-family: 'Segoe UI', sans-serif;
+    color: white; /* Global text set to white */
+    min-height: 100vh;
+}
+
+/* Header Styles */
+.header {
+    background-color: #121221 !important;
+    padding: 15px 40px;
+    border-bottom: 1px solid #2A2A3A;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+/* ============================================
+   LOGO/BRAND - CHANGED TO WHITE
+   ============================================ */
+
+.header-logo a {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #FFFFFF; /* Changed to White */
+    text-decoration: none;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    transition: opacity 0.3s ease;
+}
+
+.header-logo a:hover {
+    opacity: 0.8;
+}
+
+/* ============================================
+   SEARCH BAR - Kept white background for clarity
+   ============================================ */
+
+.header-search {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 25px;
+    padding: 8px 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    max-width: 350px;
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    color: #000000; /* Stays black because BG is white */
+}
+
+.search-input::placeholder {
+    color: #999999;
+}
+
+.search-btn {
+    background: none;
+    border: none;
+    color: #666666;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0 8px;
+    transition: color 0.3s ease;
+}
+
+.search-btn:hover {
+    color: #000000;
+}
+
+/* ============================================
+   RIGHT NAVIGATION - CHANGED TO WHITE
+   ============================================ */
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-shrink: 0;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    font-size: 1.3rem;
+    color: #FFFFFF; /* Changed to White */
+    cursor: pointer;
+    padding: 8px;
+    position: relative;
+    transition: color 0.3s ease, transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-btn:hover {
+    color: #A3E635; /* Lime green on hover */
+    transform: scale(1.1);
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #e53935;
+    color: #ffffff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+/* ============================================
+   HAMBURGER MENU - CHANGED TO WHITE
+   ============================================ */
+
+.hamburger-menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 28px;
+    height: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    flex-shrink: 0;
+}
+
+.hamburger-menu span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background-color: #FFFFFF; /* Changed to White */
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+.hamburger-menu:hover span {
+    background-color: #A3E635;
+}
+
+/* ... Dropdown remains white for contrast ... */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #ffffff;
+    min-width: 240px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px) scaleY(0.95);
+    transform-origin: top right;
+    transition: all 0.3s ease;
+    z-index: 9999;
+    margin-top: 15px;
+    overflow: hidden;
+}
+
+.dropdown-menu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scaleY(1);
+}
+
+.dropdown-menu ul li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    color: #000000; /* Stays black for white dropdown */
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+/* ============================================
+   HERO SECTION - CHANGED TO WHITE
+   ============================================ */
+
+.main-content {
+    padding-top: 100px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 60px;
+}
+
+.hero-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: #FFFFFF; /* Changed to White */
+    margin-bottom: 15px;
+    letter-spacing: -1px;
+}
+
+.hero-subtitle {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: #BBBBBB; /* Light Grey for readability */
+    margin-bottom: 50px;
+}
+
+.feature-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #1A1A2E; /* Darker button for dark theme */
+    padding: 15px 25px;
+    border-radius: 50px;
+    text-decoration: none;
+    color: #FFFFFF; /* Changed to White */
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    border: 1px solid #2A2A3A;
+}
+
+/* ============================================
+   PAGE CONTENT - CHANGED TO WHITE
+   ============================================ */
+
+.page-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #FFFFFF; /* Changed to White */
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.page-subtitle {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    color: #AAAAAA; /* Lighter grey */
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+/* Empty State / Cards */
+.empty-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #FFFFFF; /* Changed to White */
+}
+
+.work-card, .wishlist-card {
+    background: #1A1A2E; /* Dark card BG */
+    border-radius: 12px;
+    color: #FFFFFF;
+}
+
+.wishlist-name {
+    font-weight: 600;
+    color: #FFFFFF; /* Changed to White */
+}
+
+/* ============================================
+   SETTINGS - CHANGED TO WHITE
+   ============================================ */
+
+.settings-section {
+    background: #1A1A2E; /* Dark BG */
+    border-radius: 12px;
+    border: 1px solid #2A2A3A;
+}
+
+.settings-section-title {
+    color: #FFFFFF; /* Changed to White */
+    border-bottom: 1px solid #2A2A3A;
+}
+
+.settings-option {
+    color: #FFFFFF; /* Changed to White */
+    border-bottom: 1px solid #2A2A3A;
+}
+
+/* ============================================
+   DESIGN SELECTION - CHANGED TO WHITE
+   ============================================ */
+
+.design-title {
+    font-family: 'Cormorant Garamond', serif;
+    color: #FFFFFF; /* Changed to White */
+}
+
+.design-folder {
+    background-color: #1A1A2E; /* Dark folder BG */
+    color: #FFFFFF; /* Changed to White */
+    border: 2px solid transparent;
+}
+
+/* ============================================
+   NAVIGATION FOOTER - NO CHANGES (Lime Green)
+   ============================================ */
+
+.navigation-footer {
+    display: flex;
+    justify-content: center; 
+    padding: 50px 0; 
+    width: 100%;
+}
+
+.back-prev-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;               
+    padding: 12px 24px;
+    background-color: #A3E635;
+    color: #000000; /* Stays black for contrast on lime green */
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.back-prev-btn:hover {
+    background-color: #8ecb2e;
+    transform: translateY(-2px);
+}
+
+@media screen and (max-width: 768px) {
+    .page-container, .design-selection-page, .collage-templates-page {
+        padding-top: 120px;
+    }
+}
+/* ============================================
+   LOADING SPINNER (ADDED FOR ENHANCER)
+   ============================================ */
+.loading-container {
+    display: none; /* Hidden by default */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.spinner {
+    width: 45px;
+    height: 45px;
+    border: 4px solid rgba(163, 230, 53, 0.1);
+    border-left-color: #A3E635; /* Your Brand Lime Green */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-text {
+    color: #A3E635;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    font-size: 0.9rem;
+}

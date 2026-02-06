@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MJart - Photo Editing Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #0F0F1E;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .splash-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100%;
+            position: relative;
+        }
+
+        .splash-content {
+            text-align: center;
+            z-index: 10;
+        }
+
+        .brand-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0; 
+        }
+
+        .splash-logo-container {
+            display: flex;
+            align-items: center;
+            z-index: 2; /* Keeps logo on top of text */
+        }
+
+        /* Massive Camera Logo */
+        .splash-icon {
+            width: 300px; /* Increased size as requested */
+            height: auto;
+            filter: drop-shadow(0 0 20px rgba(163, 230, 53, 0.4));
+            animation: pulse 2s infinite ease-in-out;
+            object-fit: contain;
+            /* CRITICAL: This pulls the title much closer to the center line */
+            margin-right: -115px; 
+            position: relative;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(163, 230, 53, 0.4)); }
+            50% { transform: scale(1.02); filter: drop-shadow(0 0 35px rgba(163, 230, 53, 0.7)); }
+        }
+
+        .splash-title {
+            font-size: 6.5rem; /* Larger font to match the massive logo */
+            font-weight: 900;
+            margin: 0;
+            padding: 0;
+            letter-spacing: -2px; 
+            background: linear-gradient(to right, #ffffff, #A3E635);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            line-height: 0.8;
+            z-index: 1;
+        }
+
+        .splash-subtitle {
+            color: #A3E635;
+            font-size: 1.2rem;
+            margin-top: 15px;
+            letter-spacing: 12px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            font-weight: 600;
+            /* Offset to re-center the subtitle under the combined logo/title */
+            padding-left: 60px; 
+        }
+
+        .splash-loader {
+            margin-top: 60px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .splash-loader span {
+            width: 14px;
+            height: 14px;
+            background-color: #A3E635;
+            border-radius: 50%;
+            display: inline-block;
+            animation: bounce 1.4s infinite ease-in-out both;
+            box-shadow: 0 0 10px rgba(163, 230, 53, 0.5);
+        }
+
+        .splash-loader span:nth-child(1) { animation-delay: -0.32s; }
+        .splash-loader span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+        }
+
+        .bg-glow {
+            position: absolute;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(163, 230, 53, 0.1) 0%, rgba(15, 15, 30, 0) 70%);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        /* Mobile Adjustments */
+        @media screen and (max-width: 768px) {
+            .splash-icon { width: 200px; margin-right: -70px; }
+            .splash-title { font-size: 4rem; }
+            .splash-subtitle { padding-left: 30px; letter-spacing: 6px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="splash-container">
+        <div class="bg-glow"></div>
+        <div class="splash-content">
+            
+            <div class="brand-wrapper">
+                <div class="splash-logo-container">
+                    <img src="static/camlogo-removebg-preview.png" alt="MJart Logo" class="splash-icon">
+                </div>
+                <h1 class="splash-title">MJart</h1>
+            </div>
+
+            <p class="splash-subtitle">Transforming Reality</p>
+            
+            <div class="splash-loader">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        setTimeout(() => {
+            window.location.href = "/home";
+        }, 3000);
+    </script>
+</body>
+</html>

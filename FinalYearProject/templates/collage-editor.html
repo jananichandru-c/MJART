@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MJART - Pro Collage Editor (10 Layouts)</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root { --accent: #A3E635; --bg: #0F0F1E; --sidebar: #151525; --border: #2D2D3F; }
+        body { margin: 0; background-color: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow: hidden; }
+        
+        .header { height: 60px; background: #1A112E; display: flex; justify-content: space-between; align-items: center; padding: 0 30px; border-bottom: 1px solid var(--border); }
+        .logo { color: var(--accent); font-size: 1.5rem; font-weight: 900; letter-spacing: 2px; text-decoration: none; }
+
+        /* New Header Actions Style */
+        .header-actions { display: flex; gap: 10px; align-items: center; }
+        .action-icon-btn { background: #2D2D3F; border: none; color: white; padding: 10px 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 1.1rem; }
+        .action-icon-btn:hover { background: #3d3d52; }
+        .action-icon-btn.trash { color: #ff5555; }
+
+        .main-layout { display: flex; height: calc(100vh - 60px); }
+
+        /* Left Sidebar */
+        .sidebar { width: 80px; background: var(--sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 20px; gap: 25px; }
+        .tool-btn { color: #555; cursor: pointer; text-align: center; transition: 0.3s; font-size: 0.6rem; text-transform: uppercase; font-weight: bold; }
+        .tool-btn:hover, .tool-btn.active { color: var(--accent); }
+        .tool-btn i { font-size: 1.4rem; display: block; margin-bottom: 5px; }
+
+        /* Canvas Area */
+        .canvas-area { flex-grow: 1; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #1a1a2e 0%, #0f0f1e 100%); padding: 20px; }
+        #collageCanvas { width: 500px; height: 500px; background: white; padding: 10px; border-radius: 4px; box-shadow: 0 0 40px rgba(0,0,0,0.6); display: grid; transition: 0.3s; }
+
+        .cell { position: relative; overflow: hidden; background: #222; cursor: pointer; background-size: cover; background-position: center; border-radius: 2px; }
+        .cell-overlay { position: absolute; inset: 0; background: rgba(163, 230, 53, 0.2); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; }
+        .cell:hover .cell-overlay { opacity: 1; }
+        .cell-overlay span { background: rgba(0,0,0,0.8); color: white; padding: 5px 10px; border-radius: 4px; font-size: 0.7rem; }
+
+        /* Right Panel */
+        .controls { width: 300px; background: var(--sidebar); border-left: 1px solid var(--border); padding: 20px; overflow-y: auto; }
+        .layout-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .layout-card { background: #1a1a2e; border: 1px solid #333; padding: 12px; border-radius: 8px; cursor: pointer; text-align: center; font-size: 0.75rem; transition: 0.2s; }
+        .layout-card:hover { border-color: var(--accent); transform: scale(1.02); }
+        
+        .btn-action { background: var(--accent); color: black; border: none; width: 100%; padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 25px; transition: 0.3s; }
+        .btn-action:hover { box-shadow: 0 0 15px rgba(163, 230, 53, 0.4); }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <a href="/home" class="logo">MJART</a>
+        <div class="header-actions">
+            <button class="action-icon-btn" onclick="undo()" title="Undo"><i class="fas fa-undo"></i></button>
+            <button class="action-icon-btn" onclick="redo()" title="Redo"><i class="fas fa-redo"></i></button>
+            <button class="action-icon-btn trash" onclick="clearCanvas()" title="Clear All"><i class="fas fa-trash-alt"></i></button>
+        </div>
+        <div style="font-size: 0.8rem; opacity: 0.7;"><i class="fas fa-magic"></i> AI Powered Editor</div>
+    </header>
+
+    <div class="main-layout">
+        <div class="sidebar">
+            <div class="tool-btn active"><i class="fas fa-th-large"></i><span>Grid</span></div>
+            <div class="tool-btn" onclick="downloadCollage()"><i class="fas fa-download"></i><span>Export</span></div>
+            <div class="tool-btn" onclick="location.reload()"><i class="fas fa-sync-alt"></i><span>Reset</span></div>
+        </div>
+
+        <main class="canvas-area">
+            <div id="collageCanvas"></div>
+            <input type="file" id="imageInput" hidden accept="image/*">
+        </main>
+
+        <aside class="controls">
+            <h3 style="color: var(--accent); margin: 0 0 5px 0;">Layout Patterns</h3>
+            <p style="font-size: 0.8rem; color: #777; margin-bottom: 20px;">Choose from 10 professional grids</p>
+            
+            <div class="layout-grid" id="layoutList"></div>
+
+            <button class="btn-action" onclick="downloadCollage()">Download Design</button>
+        </aside>
+    </div>
+
+    <script>
+        const templates = {
+            'Mosaic': { grid: '"a b b" "c c d" "e f d"', areas: ['a', 'b', 'c', 'd', 'e', 'f'] },
+            'Hero Split': { grid: '"a a b" "a a c"', areas: ['a', 'b', 'c'] },
+            'Quad Grid': { grid: '"a b" "c d"', areas: ['a', 'b', 'c', 'd'] },
+            'Tall Side': { grid: '"a b b" "a c d"', areas: ['a', 'b', 'c', 'd'] },
+            'Film Strip': { grid: '"a b c d"', areas: ['a', 'b', 'c', 'd'] },
+            'Wide Banner': { grid: '"a" "b" "c"', areas: ['a', 'b', 'c'] },
+            'Modern 5': { grid: '"a b c" "a d d" "a e e"', areas: ['a', 'b', 'c', 'd', 'e'] },
+            'Big Center': { grid: '"a b c" "d e f" "g h i"', areas: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'] },
+            'T-Shape': { grid: '"a a a" "b c d" "b e d"', areas: ['a', 'b', 'c', 'd', 'e'] },
+            'Zig Zag': { grid: '"a a b" "c d d" "e f f"', areas: ['a', 'b', 'c', 'd', 'e', 'f'] }
+        };
+
+        const placeholderBase = "https://images.unsplash.com/photo-";
+        const placeholderIDs = [
+            "1502602898657-3e91760cbb34", "1493246507139-91e8bef99c02", 
+            "1464822759023-fed622ff2c3b", "1501785888041-af3ef285b470",
+            "1470071459604-3b5ec3a7fe05", "1441974231531-c6227db76b6e",
+            "1513519245088-0e12902e5a38", "1518133910546-b6c2fb7d79e3",
+            "1523275335684-37898b6baf30"
+        ];
+
+        let activeCell = null;
+        const canvas = document.getElementById('collageCanvas');
+        const imgInput = document.getElementById('imageInput');
+
+        // History Management
+        let history = [];
+        let historyStep = -1;
+
+        function saveState() {
+            historyStep++;
+            if (historyStep < history.length) {
+                history.length = historyStep;
+            }
+            history.push(canvas.innerHTML);
+        }
+
+        function undo() {
+            if (historyStep > 0) {
+                historyStep--;
+                canvas.innerHTML = history[historyStep];
+                attachCellClickListeners();
+            }
+        }
+
+        function redo() {
+            if (historyStep < history.length - 1) {
+                historyStep++;
+                canvas.innerHTML = history[historyStep];
+                attachCellClickListeners();
+            }
+        }
+
+        function clearCanvas() {
+            const cells = canvas.querySelectorAll('.cell');
+            cells.forEach(cell => cell.style.backgroundImage = 'none');
+            saveState();
+        }
+
+        function attachCellClickListeners() {
+            const cells = canvas.querySelectorAll('.cell');
+            cells.forEach(cell => {
+                cell.onclick = () => { activeCell = cell; imgInput.click(); };
+            });
+        }
+
+        function setupLayoutButtons() {
+            const list = document.getElementById('layoutList');
+            Object.keys(templates).forEach(name => {
+                const card = document.createElement('div');
+                card.className = 'layout-card';
+                card.innerText = name;
+                card.onclick = () => renderLayout(name);
+                list.appendChild(card);
+            });
+        }
+
+        function renderLayout(name) {
+            const config = templates[name];
+            canvas.innerHTML = '';
+            canvas.style.gridTemplateAreas = config.grid;
+            canvas.style.gap = '8px';
+
+            config.areas.forEach((area, index) => {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.style.gridArea = area;
+                
+                const imgId = placeholderIDs[index % placeholderIDs.length];
+                cell.style.backgroundImage = `url(${placeholderBase}${imgId}?w=500)`;
+
+                const overlay = document.createElement('div');
+                overlay.className = 'cell-overlay';
+                overlay.innerHTML = '<span><i class="fas fa-plus"></i> Change</span>';
+                cell.appendChild(overlay);
+
+                cell.onclick = () => { activeCell = cell; imgInput.click(); };
+                canvas.appendChild(cell);
+            });
+            saveState();
+        }
+
+        imgInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file && activeCell) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    activeCell.style.backgroundImage = `url(${event.target.result})`;
+                    saveState();
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        function downloadCollage() {
+            html2canvas(canvas, { useCORS: true, scale: 2 }).then(out => {
+                const a = document.createElement('a');
+                a.download = 'mjart-design.png';
+                a.href = out.toDataURL('image/png');
+                a.click();
+            });
+        }
+
+        window.onload = () => {
+            setupLayoutButtons();
+            renderLayout('Mosaic');
+        };
+    </script>
+</body>
+<footer class="editor-footer" style="padding: 20px; background: var(--sidebar); border-top: 1px solid var(--border);">
+    <div class="footer-container">
+        <a href="javascript:history.back()" class="back-btn" style="color: white; text-decoration: none;">
+            <i class="fas fa-arrow-left"></i> Back to Previous
+        </a>
+    </div>
+</footer>
+</html>
