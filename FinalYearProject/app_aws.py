@@ -21,7 +21,7 @@ app.secret_key = 'mjr_art_secret_key' # Change this for production
 
 # --- AWS CONFIGURATION ---
 REGION = 'us-east-1'
-SNS_TOPIC_ARN = 'arn:aws:sns:us-east-1:897722679886:aws_topic'
+SNS_TOPIC_ARN = 'arn:aws:sns:us-east-1:376129862283:aws_capstone_topic'
 
 dynamodb = boto3.resource('dynamodb', region_name=REGION)
 sns = boto3.client('sns', region_name=REGION)
@@ -201,4 +201,5 @@ def search_templates():
 
 if __name__ == '__main__':
     # Use 0.0.0.0 for AWS deployment
+
     app.run(host='0.0.0.0', port=5000, debug=True)
